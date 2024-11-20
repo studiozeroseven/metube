@@ -15,7 +15,7 @@ COPY Pipfile* docker-entrypoint.sh ./
 
 RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     chmod +x docker-entrypoint.sh && \
-    apk add --update ffmpeg aria2 coreutils shadow su-exec curl rsync && \
+    apk add --update nano ffmpeg aria2 coreutils shadow su-exec curl rsync && \
     apk add --update --virtual .build-deps gcc g++ musl-dev && \
     pip install --no-cache-dir pipenv && \
     pipenv install --system --deploy --clear && \
