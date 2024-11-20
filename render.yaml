@@ -3,14 +3,6 @@ services:
     name: metube
     env: docker
     dockerfilePath: Dockerfile
-    buildCommand: "" # Use the Dockerfile's build process
-    startCommand: |
-      # Install NFS client and mount the NFS share
-      apk add --no-cache nfs-utils || apt-get install -y nfs-common && \
-      mkdir -p /downloads && \
-      mount -t nfs -o rw ${NFS_SERVER}:${NFS_SHARE} /downloads && \
-      # Start the application
-      ./docker-entrypoint.sh
     autoDeploy: true
     plan: starter
     envVars:
@@ -33,4 +25,4 @@ services:
     disk:
       name: metube-data
       mountPath: /downloads
-      sizeGB: 20 # Temporary storage; used until NFS mounts
+      sizeGB: 20
