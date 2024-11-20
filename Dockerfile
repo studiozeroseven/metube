@@ -23,7 +23,8 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     apk del .build-deps && \
     rm -rf /var/cache/apk/* && \
     mkdir /.cache && chmod 777 /.cache && \
-    mkdir /downloads && chmod 777 /downloads
+    mkdir /downloads && chmod 777 /downloads && \
+    mkdir /cookies && chmod 777 /cookies && touch /cookies/cookies.txt
 
 # Install NFS utilities
 RUN apk add --no-cache nfs-utils
@@ -35,6 +36,7 @@ COPY --from=builder /metube/dist/metube ./ui/dist/metube
 ENV UID=1000
 ENV GID=1000
 ENV UMASK=022
+ENV YTDL_OPTIONS='{"cookiefile":"/cookies/cookies.txt"}'
 ENV DOWNLOAD_DIR /downloads
 ENV STATE_DIR /downloads/.metube
 ENV TEMP_DIR /downloads
