@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: metube
+    env: docker
+    dockerfilePath: Dockerfile
+    buildCommand: "" # Use the Dockerfile's build process
+    startCommand: "./docker-entrypoint.sh"
+    autoDeploy: true
+    plan: starter
+    envVars:
+      - key: DOWNLOAD_DIR
+        value: "/downloads"
+      - key: STATE_DIR
+        value: "/downloads/.metube"
+      - key: TEMP_DIR
+        value: "/downloads"
+      - key: UID
+        value: "1000"
+      - key: GID
+        value: "1000"
+      - key: UMASK
+        value: "022"
+    disk:
+      - name: metube-data
+        mountPath: /downloads
+        sizeGB: 20 # Temporary storage; used until NFS mounts
+    secretEnvVars:
+      - key: NFS_SERVER
+        value: "100.83.121.50"
+      - key: NFS_SHARE
+        value: "/4tb"
+
+startupScript: |
+  #!/bin/bash
+  set -e
+  
+  echo "Installing NFS client..."
+  apk add --no-cache nfs-utils || apt-get install -y nfs-common
+
+  echo "Mounting NFS share..."
+  mkdir -p /downloads
+  mount -t nfs -o rw ${NFS_SERVER}:${NFS_SHARE} /downloads
+
+  echo "Starting application..."
+  exec "$@"
