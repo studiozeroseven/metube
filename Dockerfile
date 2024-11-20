@@ -40,8 +40,6 @@ ENV STATE_DIR /downloads/.metube
 ENV TEMP_DIR /downloads
 VOLUME /downloads
 
-#Switch to ROOT user
-USER root
 
 # Mount NFS share and start the application
-CMD ["sh", "-c", "mkdir -p /downloads && mount -t nfs -o rw ${NFS_SERVER}:${NFS_SHARE} /downloads && ./docker-entrypoint.sh"]
+CMD ["./docker-entrypoint.sh"]
