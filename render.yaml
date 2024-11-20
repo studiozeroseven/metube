@@ -20,26 +20,22 @@ services:
         value: "1000"
       - key: UMASK
         value: "022"
-    disk:
-      - name: metube-data
-        mountPath: /downloads
-        sizeGB: 20 # Temporary storage; used until NFS mounts
-    secretEnvVars:
       - key: NFS_SERVER
-        value: "100.83.121.50"
+        value: "100.83.121.50" # Mark this as secret in the dashboard
       - key: NFS_SHARE
-        value: "/4tb"
-
-startupScript: |
-  #!/bin/bash
-  set -e
-  
-  echo "Installing NFS client..."
-  apk add --no-cache nfs-utils || apt-get install -y nfs-common
-
-  echo "Mounting NFS share..."
-  mkdir -p /downloads
-  mount -t nfs -o rw ${NFS_SERVER}:${NFS_SHARE} /downloads
-
-  echo "Starting application..."
-  exec "$@"
+        value: "/4tb" # Mark this as secret in the dashboard
+    disk:
+      name: metube-data
+      mountPath: /downloads
+      sizeGB: 20 # Temporary storage; used until NFS mounts
+    startupScript: |
+      #!/bin/bash
+      set -e
+      
+      echo "Installing NFS client..."
+      apk add --no-cache nfs-utils || apt-get install -y nfs-common
+      echo "Mounting NFS share..."
+      mkdir -p /downloads
+      mount -t nfs -o rw ${NFS_SERVER}:${NFS_SHARE} /downloads
+      echo "Starting application..."
+      exec "$@"
