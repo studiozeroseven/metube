@@ -22,7 +22,8 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     pip uninstall pipenv -y && \
     apk del .build-deps && \
     rm -rf /var/cache/apk/* && \
-    mkdir /.cache && chmod 777 /.cache
+    mkdir /.cache && chmod 777 /.cache && \
+    mkdir /downloads && chmod 777 /downloads
 
 # Install NFS utilities
 RUN apk add --no-cache nfs-utils
