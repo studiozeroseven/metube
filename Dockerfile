@@ -26,9 +26,9 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     mkdir /downloads && chmod 777 /downloads && \
     mkdir /cookies && chmod 777 /cookies && touch /cookies/cookies.txt
 
-# Install dependencies and Tailscale
+# Install dependencies
 RUN apk add --no-cache curl iptables && \
-    curl -fsSL https://pkgs.tailscale.com/stable/alpine/tailscale-stable.apk -o /tmp/tailscale.apk && \
+    curl -fsSL https://pkgs.tailscale.com/stable/alpine/tailscale_latest_amd64.apk -o /tmp/tailscale.apk && \
     apk add --allow-untrusted /tmp/tailscale.apk && \
     rm -f /tmp/tailscale.apk
 
