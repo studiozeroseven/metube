@@ -26,6 +26,12 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     mkdir /downloads && chmod 777 /downloads && \
     mkdir /cookies && chmod 777 /cookies && touch /cookies/cookies.txt
 
+# Install dependencies and Tailscale
+RUN apk add --no-cache curl iptables && \
+    curl -fsSL https://pkgs.tailscale.com/stable/alpine/tailscale-stable.apk -o /tmp/tailscale.apk && \
+    apk add --allow-untrusted /tmp/tailscale.apk && \
+    rm -f /tmp/tailscale.apk
+
 # Install NFS utilities
 RUN apk add --no-cache nfs-utils
 
@@ -43,5 +49,5 @@ ENV TEMP_DIR /downloads
 VOLUME /downloads
 
 
-# Mount NFS share and start the application
-CMD ["./docker-entrypoint.sh"]
+# Start Tailscale and the application
+CMD ["sh", "-c", "tailscaled & tailscale up --authkey=${TAILSCALE_AUTH_KEY} && tail -f /dev/null", "./docker-entrypoint.sh"]
