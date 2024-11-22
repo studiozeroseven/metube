@@ -26,15 +26,6 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     mkdir /downloads && chmod 777 /downloads && \
     mkdir /cookies && chmod 777 /cookies && touch /cookies/cookies.txt
 
-# Install dependencies
-RUN apk add --no-cache curl iptables && \
-    curl -fsSL https://pkgs.tailscale.com/stable/alpine/tailscale_latest_amd64.apk -o /tmp/tailscale.apk && \
-    apk add --allow-untrusted /tmp/tailscale.apk && \
-    rm -f /tmp/tailscale.apk
-
-# Install NFS utilities
-RUN apk add --no-cache nfs-utils
-
 # Set up the NFS mount during container startup
 COPY app ./app
 COPY --from=builder /metube/dist/metube ./ui/dist/metube
