@@ -41,4 +41,4 @@ VOLUME /downloads
 
 
 # Start Tailscale and the application
-CMD ["sh", "-c", "tailscaled & tailscale up --authkey=${TAILSCALE_AUTH_KEY} && tail -f /dev/null", "./docker-entrypoint.sh"]
+CMD ["./docker-entrypoint.sh"]
