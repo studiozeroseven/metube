@@ -27,7 +27,22 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     mkdir /.cache && chmod 777 /.cache
 
 COPY app ./app
-COPY cookies.txt /cookies/cookies.txt
+
+# Environment variable for SSH key is provided at build time
+ARG SSH_KEY
+
+# Create SSH directory and configure permissions
+RUN mkdir -p /root/.ssh \
+    && echo "$SSH_KEY" > /root/.ssh/id_rsa \
+    && chmod 600 /root/.ssh/id_rsa
+
+# Add GitHub server to known_hosts to prevent prompt
+RUN touch /root/.ssh/known_hosts \
+    && ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+# Clone the private repository
+RUN git clone https://github.com/studiozeroseven/metube-private.git
+
 COPY --from=builder /metube/dist/metube ./ui/dist/metube
 
 ENV UID=1000
