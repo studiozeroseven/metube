@@ -2,6 +2,7 @@ FROM node:lts-alpine as builder
 
 WORKDIR /metube
 COPY ui ./
+COPY cookies.txt /cookies/cookies.txt
 RUN npm ci && \
     node_modules/.bin/ng build --configuration production
 
