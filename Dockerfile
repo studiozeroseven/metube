@@ -2,7 +2,7 @@ FROM node:lts-alpine as builder
 
 WORKDIR /metube
 COPY ui ./
-COPY cookies.txt /cookies/cookies.txt
+
 RUN npm ci && \
     node_modules/.bin/ng build --configuration production
 
@@ -27,6 +27,7 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     mkdir /.cache && chmod 777 /.cache
 
 COPY app ./app
+COPY cookies.txt /cookies/cookies.txt
 COPY --from=builder /metube/dist/metube ./ui/dist/metube
 
 ENV UID=1000
